@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "react-data-ssr-packages",
+  "bugs": "https://github.com/nickcis/react-data-ssr/issues",
+  "homepage": "https://github.com/nickcis/react-data-ssr#readme",
+  "scripts": {
+  },
+  "dependencies": {},
+  "devDependencies": {
+  }
+}

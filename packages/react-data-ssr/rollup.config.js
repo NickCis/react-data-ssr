@@ -8,9 +8,10 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 
 const shared = {
   input: 'src/index.js',
-  external: ['react'],
+  external: ['react', 'prop-types'],
   globals: {
     react: 'React',
+    'prop-types': 'PropTypes',
   },
   exports: 'named',
 };

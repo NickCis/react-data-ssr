@@ -35,13 +35,15 @@ const withGetInitialData = ({
       const props = mapArgsToProps(args);
       const componentKey = generateComponentKey(Component, props);
 
-      return getInitialData({
-        ...props,
-        // Ignore setLoading as the server will render after
-        setLoading: () => {},
-        // Use setData in order to retrieve data
-        setData: data => setData(componentKey, data),
-      });
+      return getInitialData(
+        props,
+        {
+          // Ignore setLoading as the server will render after
+          setLoading: () => {},
+          // Use setData in order to retrieve data
+          setData: data => setData(componentKey, data),
+        },
+      );
     }
 
     /** React `componentDidMount` phase.
@@ -94,11 +96,13 @@ const withGetInitialData = ({
       const key = this.getComponentKey(nextKey);
       if (this.props.hasLoadedComponent(key)) return;
 
-      getInitialData({
-        ...(nextProps || this.props),
-        setLoading: b => this.setState({...this.state, isLoading: b}),
-        setData: d => this.setState({data: d}),
-      });
+      getInitialData(
+        nextProps || this.props,
+        {
+          setLoading: b => this.setState({...this.state, isLoading: b}),
+          setData: d => this.setState({data: d}),
+        },
+      );
     }
 
     /**

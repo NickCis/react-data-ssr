@@ -4,7 +4,8 @@
   "bugs": "https://github.com/nickcis/react-data-ssr/issues",
   "homepage": "https://github.com/nickcis/react-data-ssr#readme",
   "scripts": {
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "bootstrap": "lerna run bootstrap"
   },
   "devDependencies": {
     "lerna": "^2.4.0"

@@ -16,7 +16,7 @@ const withGetInitialData = ({
   class GetInitialData extends React.Component {
     constructor(props) {
       super(props);
-      const componentKey = getComponentKey(generateComponentKey(Component, props));
+      const componentKey = this.getComponentKey(generateComponentKey(Component, props));
       this.state = {
         data: (props.initialData || {})[componentKey],
         isLoading: false,
@@ -24,7 +24,7 @@ const withGetInitialData = ({
     }
 
     /** Static method called during SSR to fetch data
-     * @param {Function(componentKey, data} setData - A function used to save the fetched data while SSR.
+     * @param {Function(componentKey, data)} setData - A function used to save the fetched data while SSR.
      * @param {Object} args - all arguments applied
      * @return {Promise} - Promise that the data will be fetched
      */
@@ -79,7 +79,7 @@ const withGetInitialData = ({
       const { initialData, hasLoadedComponent, dismissLoadedComponent, ..._props } = this.props;
       const props = {
         ..._props,
-        ...(mapDataToProps(data)),
+        ...(mapDataToProps(data || {})),
       };
 
       return <Component isLoading={isLoading} {...props} />;
@@ -99,8 +99,8 @@ const withGetInitialData = ({
       getInitialData(
         nextProps || this.props,
         {
-          setLoading: b => this.setState({...this.state, isLoading: b}),
-          setData: d => this.setState({data: d}),
+          setLoading: b => this.setState({isLoading: b}),
+          setData: d => this.setState({isLoading: false, data: d}),
         },
       );
     }
@@ -127,7 +127,7 @@ const withGetInitialData = ({
   }
 
   GetInitialData.propTypes = {
-    initialData: PropTypes.object,
+    initialData: PropTypes.object.isRequired,
     hasLoadedComponent: PropTypes.func.isRequired,
     dismissLoadedComponent: PropTypes.func.isRequired,
   };

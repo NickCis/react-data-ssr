@@ -2,11 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /** High Order Component which
+ * @param {Function} mapArgsToProps -
+ * @param {Function} generateComponentKey -
+ * @param {Function} mapDataToProps -
+ * @param {Function} getInitialData -
  */
 const withGetInitialData = ({
   mapArgsToProps,
   generateComponentKey,
   mapDataToProps,
+  getInitialData,
 }) => Component => {
   class GetInitialData extends React.Component {
     constructor(props) {
@@ -25,12 +30,12 @@ const withGetInitialData = ({
      */
     static getInitialData(setData, ...args) {
       // If Component didn't implement `getInitialData` return a promise
-      if (!Component.getInitialData) return Promise.resolve(null);
+      if (!getInitialData) return Promise.resolve(null);
 
       const props = mapArgsToProps(args);
       const componentKey = generateComponentKey(Component, props);
 
-      return Component.getInitialData({
+      return getInitialData({
         ...props,
         // Ignore setLoading as the server will render after
         setLoading: () => {},
@@ -53,7 +58,7 @@ const withGetInitialData = ({
      */
     componentWillReceiveProps(nextProps) {
       // If Component didn't implement, do nothing
-      if (!Component.getInitialData) return;
+      if (!getInitialData) return;
 
       const key = this.getComponentKey();
       const nextKey = generateComponentKey(Component, nextProps);
@@ -84,12 +89,12 @@ const withGetInitialData = ({
      */
     fetchDataIfNeeded(nextProps, nextKey) {
       // If Component didn't implement, do nothing
-      if (!Component.getInitialData) return;
+      if (!getInitialData) return;
 
       const key = this.getComponentKey(nextKey);
       if (this.props.hasLoadedComponent(key)) return;
 
-      Component.getInitialData({
+      getInitialData({
         ...(nextProps || this.props),
         setLoading: b => this.setState({...this.state, isLoading: b}),
         setData: d => this.setState({data: d}),
@@ -100,7 +105,7 @@ const withGetInitialData = ({
      */
     dismissLoadedComponent() {
       // If Component didn't implement, do nothing
-      if (!Component.getInitialData) return;
+      if (!getInitialData) return;
 
       const key = this.getComponentKey();
       this.props.dismissLoadedComponent(key);

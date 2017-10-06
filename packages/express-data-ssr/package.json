@@ -1,0 +1,34 @@
+{
+  "name": "express-data-ssr",
+  "description": "`fetch` like function to perform local calls to an Express-based router.",
+  "version": "0.0.2",
+  "license": "MIT",
+  "author": "Nicolas Cisco <ncisco@gmail.com>",
+  "repository": "git@github.com:nickcis/react-data-ssr.git",
+  "homepage": "https://github.com/nickcis/react-data-ssr#readme",
+  "keywords": [
+    "react-data-ssr",
+    "react",
+    "ssr",
+    "server side rendering",
+    "express",
+    "router",
+    "getInitialData",
+    "fetch",
+    "data"
+  ],
+  "main": "dist/express-data-ssr.js",
+  "module": "dist/express-data-ssr.es6.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "echo 'todo'"
+  },
+  "peerDependencies": {
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  }
+}

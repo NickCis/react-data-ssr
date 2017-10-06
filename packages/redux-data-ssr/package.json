@@ -1,6 +1,6 @@
 {
-  "name": "react-data-ssr",
-  "description": "Data fetching for React components (Client & SSR)",
+  "name": "redux-data-ssr",
+  "description": "Data fetching for React components (Client & SSR) - Redux bindings",
   "version": "0.0.2",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
@@ -15,10 +15,11 @@
     "hoc",
     "getInitialData",
     "fetch",
-    "data"
+    "data",
+    "redux"
   ],
-  "main": "dist/react-data-ssr.js",
-  "module": "dist/react-data-ssr.es6.js",
+  "main": "dist/redux-data-ssr.js",
+  "module": "dist/redux-data-ssr.es6.js",
   "files": [
     "dist"
   ],

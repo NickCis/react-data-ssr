@@ -1,0 +1,30 @@
+{
+  "name": "react-data-ssr-server",
+  "description": "Server side initial data resolution for react-data-ssr",
+  "version": "0.0.2",
+  "license": "MIT",
+  "author": "Nicolas Cisco <ncisco@gmail.com>",
+  "repository": "git@github.com:nickcis/react-data-ssr.git",
+  "homepage": "https://github.com/nickcis/react-data-ssr#readme",
+  "keywords": [
+    "react-data-ssr",
+    "react",
+    "ssr",
+    "server side rendering",
+    "getInitialData",
+    "fetch",
+    "data"
+  ],
+  "main": "dist/react-data-ssr-server.js",
+  "module": "dist/react-data-ssr-server.es6.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "echo 'todo'"
+  },
+  "peerDependencies": {
+  },
+  "devDependencies": {}
+}

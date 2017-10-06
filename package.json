@@ -1,13 +1,14 @@
 {
   "private": true,
-  "name": "react-data-ssr-packages",
   "bugs": "https://github.com/nickcis/react-data-ssr/issues",
   "homepage": "https://github.com/nickcis/react-data-ssr#readme",
   "scripts": {
     "build": "lerna run build",
-    "bootstrap": "lerna run bootstrap"
+    "bootstrap": "lerna bootstrap && node ./scripts/bootstrap.js"
   },
   "devDependencies": {
-    "lerna": "^2.4.0"
+    "lerna": "^2.4.0",
+    "semver": "^5.4.1",
+    "shelljs": "^0.7.8"
   }
 }

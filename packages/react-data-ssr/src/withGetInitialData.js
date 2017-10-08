@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import createGenerateComponentKey from './createGenerateComponentKey';
 
 /** High Order Component which
- * @param {Function} getInitialData -
- * @param {Function} mapDataToProps -
- * @param {Function} mapArgsToProps - (optional)
- * @param {Function} generateComponentKey - (optional)
+ * @param {(props: Object, bag: Object) => Promise} getInitialData -
+ * @param {(data: Object) => Object} mapDataToProps -
+ * @param {(branch: Object, extra?: Object) => Object} mapArgsToProps - (optional)
+ * @param {(component: ReactComponent, props: Object) => String} generateComponentKey - (optional)
  */
 const withGetInitialData = ({
   getInitialData,
@@ -25,15 +25,15 @@ const withGetInitialData = ({
     }
 
     /** Static method called during SSR to fetch data
-     * @param {Function(componentKey, data)} setData - A function used to save the fetched data while SSR.
-     * @param {Object} args - all arguments applied
+     * @param {(key: String, data: Object) => Object} setData - A function used to save the fetched data while SSR.
+     * @param {Object} extra - Extra data
      * @return {Promise} - Promise that the data will be fetched
      */
-    static getInitialData(setData, ...args) {
+    static getInitialData(setData, branch, extra) {
       // If Component didn't implement `getInitialData` return a promise
       if (!getInitialData) return Promise.resolve(null);
 
-      const props = mapArgsToProps(args);
+      const props = mapArgsToProps(branch, extra);
       const componentKey = generateComponentKey(Component, props);
 
       return getInitialData(

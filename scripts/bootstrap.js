@@ -75,7 +75,8 @@ packages.forEach(pkg => {
 
 // npm link packages
 [
-  'react-data-ssr'
+  'react-data-ssr',
+  'react-data-ssr-server',
 ].forEach(p => {
   shell.exec('yarn link', {
     cwd: path.join(process.cwd(), 'packages', p),

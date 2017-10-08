@@ -15,8 +15,7 @@
     "fetch",
     "data"
   ],
-  "main": "dist/react-data-ssr-server.js",
-  "module": "dist/react-data-ssr-server.es6.js",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],

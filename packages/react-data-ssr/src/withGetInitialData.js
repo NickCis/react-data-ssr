@@ -7,6 +7,7 @@ import createGenerateComponentKey from './createGenerateComponentKey';
  * @param {(data: Object) => Object} mapDataToProps -
  * @param {(branch: Object, extra?: Object) => Object} mapArgsToProps - (optional)
  * @param {(component: ReactComponent, props: Object) => String} generateComponentKey - (optional)
+ * @return {ReactComponent}
  */
 const withGetInitialData = ({
   getInitialData,
@@ -17,7 +18,9 @@ const withGetInitialData = ({
   class GetInitialData extends React.Component {
     constructor(props) {
       super(props);
-      const componentKey = this.getComponentKey(generateComponentKey(Component, props));
+      const componentKey = this.getComponentKey(
+        generateComponentKey(Component, props)
+      );
       this.state = {
         data: (props.initialData || {})[componentKey],
         isLoading: false,
@@ -36,15 +39,12 @@ const withGetInitialData = ({
       const props = mapArgsToProps(branch, extra);
       const componentKey = generateComponentKey(Component, props);
 
-      return getInitialData(
-        props,
-        {
-          // Ignore setLoading as the server will render after
-          setLoading: () => {},
-          // Use setData in order to retrieve data
-          setData: data => setData(componentKey, data),
-        },
-      );
+      return getInitialData(props, {
+        // Ignore setLoading as the server will render after
+        setLoading: () => {},
+        // Use setData in order to retrieve data
+        setData: data => setData(componentKey, data),
+      });
     }
 
     /** React `componentDidMount` phase.
@@ -79,7 +79,7 @@ const withGetInitialData = ({
       const { isLoading, data } = this.state;
       const props = {
         ...this.props,
-        ...(mapDataToProps(data || {})),
+        ...mapDataToProps(data || {}),
       };
 
       return <Component isLoading={isLoading} {...props} />;
@@ -96,13 +96,10 @@ const withGetInitialData = ({
       const key = this.getComponentKey(nextKey);
       if (this.props.hasLoadedComponent(key)) return;
 
-      getInitialData(
-        nextProps || this.props,
-        {
-          setLoading: b => this.setState({isLoading: b}),
-          setData: d => this.setState({isLoading: false, data: d}),
-        },
-      );
+      getInitialData(nextProps || this.props, {
+        setLoading: b => this.setState({ isLoading: b }),
+        setData: d => this.setState({ isLoading: false, data: d }),
+      });
     }
 
     /**
@@ -116,11 +113,9 @@ const withGetInitialData = ({
     }
 
     getComponentKey(nextKey) {
-      if (nextKey)
-        this.key = nextKey;
+      if (nextKey) this.key = nextKey;
 
-      if (!this.key)
-        this.key = generateComponentKey(Component, this.props);
+      if (!this.key) this.key = generateComponentKey(Component, this.props);
 
       return this.key;
     }

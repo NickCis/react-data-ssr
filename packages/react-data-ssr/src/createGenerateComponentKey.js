@@ -8,10 +8,9 @@ const prod = process.env.NODE_ENV === 'production';
 const createGenerateComponentKey = () => {
   const counter = keyCounter++;
   return (Component, props) => {
-    if (prod)
-      return `c-${counter}`;
+    if (prod) return `c-${counter}`;
     return `${Component.name}-${counter}`;
-  }
+  };
 };
 
 export default createGenerateComponentKey;

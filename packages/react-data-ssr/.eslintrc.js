@@ -23,5 +23,6 @@ module.exports = {
       trailingComma: 'es5',
     }],
     'require-jsdoc': 'off',
+    'valid-jsdoc': 'off',
   },
 };

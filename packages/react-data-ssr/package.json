@@ -1,7 +1,7 @@
 {
   "name": "react-data-ssr",
   "description": "Data fetching for React components (Client & SSR)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
   "repository": "git@github.com:nickcis/react-data-ssr.git",

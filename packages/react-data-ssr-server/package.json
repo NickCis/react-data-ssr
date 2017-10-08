@@ -1,7 +1,7 @@
 {
   "name": "react-data-ssr-server",
   "description": "Server side initial data resolution for react-data-ssr",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
   "repository": "git@github.com:nickcis/react-data-ssr.git",
@@ -24,7 +24,6 @@
     "prebuild": "rimraf dist",
     "build": "babel src --out-dir dist"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",

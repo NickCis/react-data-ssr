@@ -7,9 +7,9 @@
  */
 function resolveInitialData(branches, setData, extra) {
   const promises = branches.reduce((acc, b) => {
-    const getInitialData = (b.route ? b.route.component : (b.component || b)).getInitialData;
-    if (getInitialData)
-      acc = acc.concat(getInitialData(setData, b, extra));
+    const getInitialData = (b.route ? b.route.component : b.component || b)
+      .getInitialData;
+    if (getInitialData) acc = acc.concat(getInitialData(setData, b, extra));
     return acc;
   }, []);
   return Promise.all(promises);

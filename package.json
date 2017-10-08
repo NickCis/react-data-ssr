@@ -5,6 +5,8 @@
   "scripts": {
     "build": "lerna run build",
     "bootstrap": "lerna bootstrap && node ./scripts/bootstrap.js",
+    "format": "lerna run format",
+    "lint": "lerna run lint",
     "doctoc": "find . -not -wholename '*node_modules*' -name '*.md' -exec grep -q '<!-- START doctoc' {} \\; -exec doctoc {} \\;"
   },
   "devDependencies": {

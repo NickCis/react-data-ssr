@@ -25,8 +25,8 @@ server
         <StaticRouter location={req.url} context={context}>
           {renderRoutes(routes, {
             initialData: data,
-            hasLoadedComponent: () => {},
-            dismissLoadedComponent: () => {},
+            hasLoadedComponent: () => console.trace('Should not call `hasLoadedComponent` in SSR`'),
+            dismissLoadedComponent: () => console.trace('Should not call `dismissLoadedComponent` in SSR`'),
           })}
         </StaticRouter>
       );

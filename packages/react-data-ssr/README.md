@@ -10,8 +10,21 @@ npm -i react-data-ssr --save
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Usage](#usage)
+  - [Simple Example](#simple-example)
+- [Api](#api)
+  - [`withGetInitialData(options)`](#withgetinitialdataoptions)
+    - [`options`](#options)
+      - [`mapArgsToProps: (...args) => object`](#mapargstoprops-args--object)
+      - [`generateComponentKey: (component: ReactComponent, props: Object) => String`](#generatecomponentkey-component-reactcomponent-props-object--string)
+      - [`mapDataToProps: (data: Object) => Object`](#mapdatatoprops-data-object--object)
+      - [`getInitialData: (props: Object, bag: Object) => Promise`](#getinitialdata-props-object-bag-object--promise)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Usage
 

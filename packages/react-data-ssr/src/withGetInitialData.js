@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import createGenerateComponentKey from './createGenerateComponentKey';
 
 /** High Order Component which
- * @param {Function} mapArgsToProps -
- * @param {Function} generateComponentKey -
- * @param {Function} mapDataToProps -
  * @param {Function} getInitialData -
+ * @param {Function} mapDataToProps -
+ * @param {Function} mapArgsToProps - (optional)
+ * @param {Function} generateComponentKey - (optional)
  */
 const withGetInitialData = ({
-  mapArgsToProps,
-  generateComponentKey,
-  mapDataToProps,
   getInitialData,
+  mapDataToProps,
+  mapArgsToProps = () => ({}),
+  generateComponentKey = createGenerateComponentKey(),
 }) => Component => {
   class GetInitialData extends React.Component {
     constructor(props) {
@@ -76,9 +77,8 @@ const withGetInitialData = ({
 
     render() {
       const { isLoading, data } = this.state;
-      const { initialData, hasLoadedComponent, dismissLoadedComponent, ..._props } = this.props;
       const props = {
-        ..._props,
+        ...this.props,
         ...(mapDataToProps(data || {})),
       };
 

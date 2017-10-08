@@ -20,11 +20,6 @@ List.propTypes = {
   list: PropTypes.array,
 }
 
-const mapArgsToProps = () => ({
-});
-
-const generateComponentKey = (Component, props) => 'List';
-
 const mapDataToProps = ({data}) => ({
   list: data,
 });
@@ -44,8 +39,6 @@ const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
 });
 
 export default withGetInitialData({
-  mapArgsToProps,
-  generateComponentKey,
   mapDataToProps,
   getInitialData,
 })(List);

@@ -19,11 +19,6 @@ Home.propTypes = {
   body: PropTypes.string,
 };
 
-const mapArgsToProps = () => ({
-});
-
-const generateComponentKey = (Component, props) => 'Home';
-
 const mapDataToProps = ({title, body}) => ({
   title: title,
   body: body,
@@ -41,8 +36,6 @@ const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
 });
 
 export default withGetInitialData({
-  mapArgsToProps,
-  generateComponentKey,
   mapDataToProps,
   getInitialData,
 })(Home);

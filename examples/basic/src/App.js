@@ -3,14 +3,18 @@ import { renderRoutes } from 'react-router-config';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './App.css';
+import withGetInitialData from 'react-data-ssr';
 
-const App = ({ route, hasLoadedComponent, dismissLoadedComponent, initialData }) => (
+const App = ({ route, hasLoadedComponent, dismissLoadedComponent, initialData, links }) => (
   <div>
     <div>React Data SSR example.</div>
     <div>
       <ul>
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/list'>List</Link></li>
+        { (links || []).map((l, i) =>
+          <li key={i}>
+            <Link to={l.to}>{l.text}</Link>
+          </li>
+        ) }
       </ul>
     </div>
     <div>
@@ -29,4 +33,24 @@ App.propTypes = {
   route: PropTypes.object.isRequired,
 };
 
-export default App;
+const mapDataToProps = ({links}) => ({
+  links,
+});
+
+const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
+  setLoading(true);
+  setTimeout(() => {
+    setData({
+      links: [
+        { to: '/', text: 'Home' },
+        { to: '/list', text: 'List' },
+      ]
+    });
+    rs();
+  }, 1000);
+});
+
+export default withGetInitialData({
+  mapDataToProps,
+  getInitialData,
+})(App);

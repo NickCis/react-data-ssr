@@ -5,25 +5,11 @@ import { StaticRouter } from 'react-router';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
+import resolveInitialData from 'react-data-ssr-server';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const server = express();
-
-/**
- * XXX: move this to `react-data-ssr-server`
- * @params {Array} branches - React router config branches o component list
- * @return {Promise} -
- */
-function resolveInitialData(branches, setData, ...args) {
-  const promises = branches.reduce((acc, b) => {
-    const getInitialData = b.route ? b.route.component.getInitialData : b;
-    if (getInitialData)
-      acc = acc.concat(getInitialData(setData, ...args));
-    return acc;
-  }, []);
-  return Promise.all(promises);
-}
 
 server
   .disable('x-powered-by')

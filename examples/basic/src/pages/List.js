@@ -9,7 +9,7 @@ const List = ({isLoading, list}) => {
     <div>
       <h1>List</h1>
       <ul>
-        {(list||[]).map((l, i) => <li key={i}>${l}</li>)}
+        {(list||[]).map((l, i) => <li key={i}>{l}</li>)}
       </ul>
     </div>
   );

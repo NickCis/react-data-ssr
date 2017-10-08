@@ -28,7 +28,7 @@
     "format": "prettier --trailing-comma es5 --single-quote --write `find src -name '*.js'`",
     "test": "BABEL_ENV=test NODE_ENV=test jest --env=jsdom",
     "lint": "eslint src",
-    "build": "NODE_ENV=production rollup -c"
+    "build": "BABEL_ENV=production NODE_ENV=production rollup -c"
   },
   "peerDependencies": {
     "prop-types": ">=15",

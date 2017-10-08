@@ -15,4 +15,4 @@ function resolveInitialData(branches, setData, ...args) {
   return Promise.all(promises);
 }
 
-module.exports = resulveInitialData;
+module.exports = resolveInitialData;

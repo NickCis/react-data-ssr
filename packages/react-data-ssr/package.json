@@ -23,6 +23,7 @@
     "dist"
   ],
   "scripts": {
+    "prepublishOnly": "yarn build",
     "prebuild": "rimraf dist",
     "build": "rollup -c"
   },

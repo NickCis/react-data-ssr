@@ -3,56 +3,69 @@ import PropTypes from 'prop-types';
 import createGenerateComponentKey from './createGenerateComponentKey';
 
 /** High Order Component which
- * @param {(props: Object, bag: Object) => Promise} getInitialData -
+ * @param {(props: Object, bag: Object) => Promise} getData -
  * @param {(data: Object) => Object} mapDataToProps -
+ * @param {(props: Object, nextProps: Object) => bool} shouldGetData - (optional)
  * @param {(branch: Object, extra?: Object) => Object} mapArgsToProps - (optional)
  * @param {(component: ReactComponent, props: Object) => String} generateComponentKey - (optional)
  * @return {ReactComponent}
  */
 const withGetInitialData = ({
-  getInitialData,
+  getData,
   mapDataToProps,
+  shouldGetData = () => false,
   mapArgsToProps = () => ({}),
   generateComponentKey = createGenerateComponentKey(),
 }) => Component => {
   class GetInitialData extends React.Component {
-    constructor(props) {
-      super(props);
-      const componentKey = this.getComponentKey(
-        generateComponentKey(Component, props)
-      );
-      this.state = {
-        data: (props.initialData || {})[componentKey],
-        isLoading: false,
+    /** Static method called during SSR to fetch data
+     * @param {Object} [branch] - Extra data
+     * @param {Object} [extra] - Extra data
+     * @return {Object} - { key: ComponentKey, promise: Promise that the data will be fetched }
+     */
+    static getInitialData(branch, extra) {
+      let promise = Promise.resolve(null);
+      const props = mapArgsToProps(branch, extra);
+      const key = generateComponentKey(Component, props);
+
+      if (getData) {
+        let data = null;
+        promise = getData(props, {
+          // Ignore setLoading as the server will render after
+          setLoading: () => {},
+          // Use setData in order to retrieve data
+          setData: d => data = d,
+        }).then(() => data);
+      }
+
+      return {
+        promise,
+        key,
       };
     }
 
-    /** Static method called during SSR to fetch data
-     * @param {(key: String, data: Object) => Object} setData - A function used to save the fetched data while SSR.
-     * @param {Object} extra - Extra data
-     * @return {Promise} - Promise that the data will be fetched
-     */
-    static getInitialData(setData, branch, extra) {
-      // If Component didn't implement `getInitialData` return a promise
-      if (!getInitialData) return Promise.resolve(null);
-
-      const props = mapArgsToProps(branch, extra);
-      const componentKey = generateComponentKey(Component, props);
-
-      return getInitialData(props, {
-        // Ignore setLoading as the server will render after
-        setLoading: () => {},
-        // Use setData in order to retrieve data
-        setData: data => setData(componentKey, data),
-      });
+    constructor(props) {
+      super(props);
+      this.key = generateComponentKey(Component, props)
+      this.state = {
+        data: props.getInitialData(this.key),
+        isLoading: false,
+      };
     }
 
     /** React `componentDidMount` phase.
      * As far as data fetching, it is only called on the client side when the component is mounted.
      * A double fetch has to be prevented (fetch data when the server has already provided it)
+     *
+     * Check if data has to be fetched, if it does, it calls `getData` of Component.
+     * The idea of this method is to prevent the double fetch when hydrating SSR code.
+     * It checks if the Component's key has been fetched.
      */
     componentDidMount() {
-      this.fetchDataIfNeeded();
+      // If Component didn't implement, do nothing
+      if (!getData) return;
+      if (this.props.hasLoadedComponent(this.key)) return;
+      this.getData();
     }
 
     /** React `componentWillReceiveProps` phase.
@@ -61,14 +74,12 @@ const withGetInitialData = ({
      */
     componentWillReceiveProps(nextProps) {
       // If Component didn't implement, do nothing
-      if (!getInitialData) return;
+      if (!getData) return;
+      if (!shouldGetData(this.props, nextProps))
+        return;
 
-      const key = this.getComponentKey();
-      const nextKey = generateComponentKey(Component, nextProps);
-
-      if (key === nextKey) return;
       this.dismissLoadedComponent();
-      this.fetchDataIfNeeded(nextProps, nextKey);
+      this.getData(nextProps);
     }
 
     componentWillUnmount() {
@@ -85,18 +96,12 @@ const withGetInitialData = ({
       return <Component isLoading={isLoading} {...props} />;
     }
 
-    /** Check if data has to be fetched, if it does, it calls `getInitialData` of Component.
-     * The idea of this method is to prevent the double fetch when hydrating SSR code.
-     * It checks if the Component's key has been fetched.
+    /** Performs data getting
      */
-    fetchDataIfNeeded(nextProps, nextKey) {
+    getData(nextProps) {
       // If Component didn't implement, do nothing
-      if (!getInitialData) return;
-
-      const key = this.getComponentKey(nextKey);
-      if (this.props.hasLoadedComponent(key)) return;
-
-      getInitialData(nextProps || this.props, {
+      if (!getData) return;
+      getData(nextProps || this.props, {
         setLoading: b => this.setState({ isLoading: b }),
         setData: d => this.setState({ isLoading: false, data: d }),
       });
@@ -106,23 +111,13 @@ const withGetInitialData = ({
      */
     dismissLoadedComponent() {
       // If Component didn't implement, do nothing
-      if (!getInitialData) return;
-
-      const key = this.getComponentKey();
-      this.props.dismissLoadedComponent(key);
-    }
-
-    getComponentKey(nextKey) {
-      if (nextKey) this.key = nextKey;
-
-      if (!this.key) this.key = generateComponentKey(Component, this.props);
-
-      return this.key;
+      if (!getData) return;
+      this.props.dismissLoadedComponent(this.key);
     }
   }
 
   GetInitialData.propTypes = {
-    initialData: PropTypes.object.isRequired,
+    getInitialData: PropTypes.func.isRequired,
     hasLoadedComponent: PropTypes.func.isRequired,
     dismissLoadedComponent: PropTypes.func.isRequired,
   };

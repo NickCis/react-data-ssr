@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withGetInitialData from 'react-data-ssr';
+import { withGetInitialData } from 'react-data-ssr';
 
 const Home = ({isLoading, title, body}) => {
   if (isLoading)
@@ -24,7 +24,7 @@ const mapDataToProps = ({title, body}) => ({
   body: body,
 });
 
-const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
+const getData = (props, {setLoading, setData}) => new Promise(rs => {
   setLoading(true);
   setTimeout(() => {
     setData({
@@ -37,5 +37,5 @@ const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
 
 export default withGetInitialData({
   mapDataToProps,
-  getInitialData,
+  getData,
 })(Home);

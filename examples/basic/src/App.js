@@ -3,9 +3,9 @@ import { renderRoutes } from 'react-router-config';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './App.css';
-import withGetInitialData from 'react-data-ssr';
+import { withGetInitialData } from 'react-data-ssr';
 
-const App = ({ route, hasLoadedComponent, dismissLoadedComponent, initialData, links }) => (
+const App = ({ route, hasLoadedComponent, dismissLoadedComponent, getInitialData, links }) => (
   <div>
     <div>React Data SSR example.</div>
     <div>
@@ -22,7 +22,7 @@ const App = ({ route, hasLoadedComponent, dismissLoadedComponent, initialData, l
         renderRoutes(route.routes, {
           hasLoadedComponent,
           dismissLoadedComponent,
-          initialData,
+          getInitialData,
         })
       }
     </div>
@@ -37,7 +37,7 @@ const mapDataToProps = ({links}) => ({
   links,
 });
 
-const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
+const getData = (props, {setLoading, setData}) => new Promise(rs => {
   setLoading(true);
   setTimeout(() => {
     setData({
@@ -52,5 +52,5 @@ const getInitialData = (props, {setLoading, setData}) => new Promise(rs => {
 
 export default withGetInitialData({
   mapDataToProps,
-  getInitialData,
+  getData,
 })(App);

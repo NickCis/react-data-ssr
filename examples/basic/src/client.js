@@ -11,7 +11,7 @@ hydrate(
       renderRoutes(routes, {
         hasLoadedComponent: k => k in data,
         dismissLoadedComponent: k => delete data[k],
-        initialData: data,
+        getInitialData: k => data[k],
       })
     }
   </BrowserRouter>,

@@ -260,7 +260,7 @@ describe('withGetInitialData Component', () => {
     expect(getData).toHaveBeenCalledTimes(2);
   });
 
-  it('should map data to properties with initial data', async () => {
+  it('should map data to properties with initial data', () => {
     const data = { test: 'yes' };
     const mapDataToProps = jest.fn().mockImplementation(data => ({
       testProp: data.test,
@@ -280,5 +280,78 @@ describe('withGetInitialData Component', () => {
 
     expect(MockComponent).toHaveBeenCalled();
     expect(mapDataToProps).toHaveBeenCalledWith(data);
+  });
+
+  it('should set `isLoading` to true if data has to be fetched', () => {
+    const mapDataToProps = jest.fn();
+    const MockComponent = jest.fn().mockImplementation(({isLoading}) => {
+      expect(isLoading).toBe(true);
+      return null;
+    });
+
+    const getData = jest.fn().mockImplementation((props, {setLoading}) => {
+      setLoading(true);
+      return Promise.resolve();
+    });
+
+    const Component = withGetInitialData({
+      getData,
+      mapDataToProps,
+    })(MockComponent);
+
+    mount(<Component getInitialData={jest.fn()} hasLoadedComponent={jest.fn()} dismissLoadedComponent={jest.fn()}/>);
+    expect(MockComponent).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set `isLoading` to false if data has not to be fetched', () => {
+    const mapDataToProps = jest.fn();
+    const MockComponent = jest.fn().mockImplementation(({isLoading}) => {
+      expect(isLoading).toBe(false);
+      return null;
+    });
+
+    const getData = jest.fn().mockReturnValue(Promise.resolve());
+
+    const Component = withGetInitialData({
+      getData,
+      mapDataToProps,
+    })(MockComponent);
+
+    mount(<Component getInitialData={jest.fn()} hasLoadedComponent={jest.fn().mockReturnValue(true)} dismissLoadedComponent={jest.fn()}/>);
+    expect(MockComponent).toHaveBeenCalledTimes(1);
+  });
+
+  it('should change the `isLoading` when data is setted', done => {
+    const data = {test: 'test'};
+    let expectFunc = ({isLoading}) => {
+      expect(isLoading).toBe(true);
+    };
+    const mapDataToProps = jest.fn().mockImplementation(({test}) => ({test}));
+    const MockComponent = jest.fn().mockImplementation(props => {
+      expectFunc(props);
+      return null;
+    });
+
+    let resolve;
+    const promise = new Promise(rs => resolve = rs);
+    const getData = jest.fn().mockImplementation((props, {setLoading, setData}) => {
+      setLoading(true);
+      return promise.then(() => setData(data));
+    });
+    const Component = withGetInitialData({
+      getData,
+      mapDataToProps,
+    })(MockComponent);
+
+    mount(<Component getInitialData={jest.fn()} hasLoadedComponent={jest.fn()} dismissLoadedComponent={jest.fn()}/>);
+
+    expect(MockComponent).toHaveBeenCalledTimes(1);
+    expectFunc = ({isLoading, test}) => {
+      expect(isLoading).toBe(false);
+      expect(test).toBe(data.test);
+      expect(MockComponent).toHaveBeenCalledTimes(2);
+      done();
+    };
+    resolve();
   });
 });

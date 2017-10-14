@@ -49,7 +49,12 @@ const withGetInitialData = ({
       this.key = generateComponentKey(Component, props)
       this.state = {
         data: props.getInitialData(this.key),
-        isLoading: false,
+        // We are faking the value of isLoading in order to prevent a rendering.
+        // If the Component hasn't loaded, the user will call `setLoading(true)` on `getData`
+        // If user doesn't do it, the value will be overriden in the `setData`.
+        // There is also the case, that the user doesn't call `setLoading` / `setData`, the `isLoading` value
+        // will be incorrectly setted, but also, the user won't use it. So it doesn't really matter.
+        isLoading: !props.hasLoadedComponent(this.key),
       };
     }
 
@@ -102,7 +107,7 @@ const withGetInitialData = ({
       // If Component didn't implement, do nothing
       if (!getData) return;
       getData(nextProps || this.props, {
-        setLoading: b => this.setState({ isLoading: b }),
+        setLoading: b => b !== this.state.isLoading && this.setState({ isLoading: b }),
         setData: d => this.setState({ isLoading: false, data: d }),
       });
     }

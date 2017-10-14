@@ -34,7 +34,7 @@ const withGetInitialData = ({
           // Ignore setLoading as the server will render after
           setLoading: () => {},
           // Use setData in order to retrieve data
-          setData: d => data = d,
+          setData: d => (data = d),
         }).then(() => data);
       }
 
@@ -46,7 +46,7 @@ const withGetInitialData = ({
 
     constructor(props) {
       super(props);
-      this.key = generateComponentKey(Component, props)
+      this.key = generateComponentKey(Component, props);
       this.state = {
         data: props.getInitialData(this.key),
         // We are faking the value of isLoading in order to prevent a rendering.
@@ -80,8 +80,7 @@ const withGetInitialData = ({
     componentWillReceiveProps(nextProps) {
       // If Component didn't implement, do nothing
       if (!getData) return;
-      if (!shouldGetData(this.props, nextProps))
-        return;
+      if (!shouldGetData(this.props, nextProps)) return;
 
       this.dismissLoadedComponent();
       this.getData(nextProps);
@@ -107,7 +106,8 @@ const withGetInitialData = ({
       // If Component didn't implement, do nothing
       if (!getData) return;
       getData(nextProps || this.props, {
-        setLoading: b => b !== this.state.isLoading && this.setState({ isLoading: b }),
+        setLoading: b =>
+          b !== this.state.isLoading && this.setState({ isLoading: b }),
         setData: d => this.setState({ isLoading: false, data: d }),
       });
     }

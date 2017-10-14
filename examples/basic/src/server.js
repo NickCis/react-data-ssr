@@ -5,7 +5,7 @@ import { StaticRouter } from 'react-router';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import { renderToString } from 'react-dom/server';
 import serialize from 'serialize-javascript';
-import resolveInitialData from 'react-data-ssr-server';
+import { resolveInitialData } from 'react-data-ssr-server';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -15,17 +15,15 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', (req, res) => {
-    const data = {};
     const branches = matchRoutes(routes, req.url);
-    const setData = (k, d) => data[k] = d;
-    resolveInitialData(branches, setData)
-      .then(() => {
+    resolveInitialData(branches)
+      .then(({store, errors}) => {
       const context = {};
       const markup = renderToString(
         <StaticRouter location={req.url} context={context}>
           {renderRoutes(routes, {
-            initialData: data,
-            hasLoadedComponent: () => console.trace('Should not call `hasLoadedComponent` in SSR`'),
+            getInitialData: k => store[k],
+            hasLoadedComponent: k => k in store,
             dismissLoadedComponent: () => console.trace('Should not call `dismissLoadedComponent` in SSR`'),
           })}
         </StaticRouter>
@@ -48,7 +46,7 @@ server
         <body>
           <div id="root">${markup}</div>
           <script>
-            window.__INITIAL_DATA__ = ${serialize(data)}
+            window.__INITIAL_DATA__ = ${serialize(store)}
           </script>
         </body>
         </html>`

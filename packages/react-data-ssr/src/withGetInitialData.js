@@ -4,7 +4,7 @@ import createGenerateComponentKey from './createGenerateComponentKey';
 
 /** High Order Component which
  * @param {(props: Object, bag: Object) => Promise} getData -
- * @param {(data: Object) => Object} mapDataToProps -
+ * @param {(data: Object, ownProps: Object) => Object} mapDataToProps -
  * @param {(props: Object, nextProps: Object) => bool} shouldGetData - (optional)
  * @param {(branch: Object, extra?: Object) => Object} mapArgsToProps - (optional)
  * @param {(component: ReactComponent, props: Object) => String} generateComponentKey - (optional)
@@ -95,7 +95,7 @@ const withGetInitialData = ({
       const { isLoading, data } = this.state;
       const props = {
         ...this.props,
-        ...mapDataToProps(data || {}),
+        ...mapDataToProps(data || {}, this.props),
       };
 
       return <Component isLoading={isLoading} {...props} />;

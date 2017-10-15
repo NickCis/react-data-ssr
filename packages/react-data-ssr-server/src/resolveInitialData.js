@@ -36,8 +36,7 @@ function resolveInitialData(branches, extra) {
   return Promise.all(promises).then(data => ({
     errors,
     store: keys.reduce((s, k, i) => {
-      if (!(k in errors))
-        s[k] = data[i];
+      if (!(k in errors)) s[k] = data[i];
       return s;
     }, {}),
   }));

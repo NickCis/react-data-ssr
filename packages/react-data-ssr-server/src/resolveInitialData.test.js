@@ -3,35 +3,45 @@ const resolveInitialData = require('./resolveInitialData');
 describe('resolveInitialData', () => {
   it('should call `getInitialData` of all components (react-router-config)', async () => {
     const dataA = { data: 'A' };
-    const ComponentA = { getInitialData: jest.fn().mockReturnValue({key: 'componentA', promise: Promise.resolve(dataA)}) };
+    const ComponentA = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentA',
+        promise: Promise.resolve(dataA),
+      }),
+    };
     const dataB = { data: 'B' };
-    const ComponentB = { getInitialData: jest.fn().mockReturnValue({key: 'componentB', promise: Promise.resolve(dataB)}) };
+    const ComponentB = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentB',
+        promise: Promise.resolve(dataB),
+      }),
+    };
     const branches = [
       {
         route: {
           component: ComponentA,
-          routes: []
+          routes: [],
         },
         match: {
           path: '/',
           url: '/',
           params: {},
-          isExact: true
-        }
+          isExact: true,
+        },
       },
       {
         route: {
           component: ComponentB,
           path: '/',
-          exact: true
+          exact: true,
         },
         match: {
           path: '/',
           url: '/',
           isExact: true,
-          params: {}
-        }
-      }
+          params: {},
+        },
+      },
     ];
 
     const extra = { extra: 'test' };
@@ -42,16 +52,26 @@ describe('resolveInitialData', () => {
     const { errors, store } = await promise;
     expect(store).toEqual({
       componentA: dataA,
-      componentB: dataB
+      componentB: dataB,
     });
     expect(errors).toEqual({});
   });
 
   it('should call `getInitialData` of all components (dictionary)', async () => {
     const dataA = { data: 'A' };
-    const ComponentA = { getInitialData: jest.fn().mockReturnValue({key: 'componentA', promise: Promise.resolve(dataA)}) };
+    const ComponentA = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentA',
+        promise: Promise.resolve(dataA),
+      }),
+    };
     const dataB = { data: 'B' };
-    const ComponentB = { getInitialData: jest.fn().mockReturnValue({key: 'componentB', promise: Promise.resolve(dataB)}) };
+    const ComponentB = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentB',
+        promise: Promise.resolve(dataB),
+      }),
+    };
     const branches = [
       {
         component: ComponentA,
@@ -59,8 +79,8 @@ describe('resolveInitialData', () => {
           path: '/',
           url: '/',
           params: {},
-          isExact: true
-        }
+          isExact: true,
+        },
       },
       {
         component: ComponentB,
@@ -68,9 +88,9 @@ describe('resolveInitialData', () => {
           path: '/',
           url: '/',
           isExact: true,
-          params: {}
-        }
-      }
+          params: {},
+        },
+      },
     ];
 
     const extra = { extra: 'test' };
@@ -81,20 +101,27 @@ describe('resolveInitialData', () => {
     const { errors, store } = await promise;
     expect(store).toEqual({
       componentA: dataA,
-      componentB: dataB
+      componentB: dataB,
     });
     expect(errors).toEqual({});
   });
 
   it('should call `getInitialData` of all components (Component)', async () => {
     const dataA = { data: 'A' };
-    const ComponentA = { getInitialData: jest.fn().mockReturnValue({key: 'componentA', promise: Promise.resolve(dataA)}) };
+    const ComponentA = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentA',
+        promise: Promise.resolve(dataA),
+      }),
+    };
     const dataB = { data: 'B' };
-    const ComponentB = { getInitialData: jest.fn().mockReturnValue({key: 'componentB', promise: Promise.resolve(dataB)}) };
-    const branches = [
-      ComponentA,
-      ComponentB
-    ];
+    const ComponentB = {
+      getInitialData: jest.fn().mockReturnValue({
+        key: 'componentB',
+        promise: Promise.resolve(dataB),
+      }),
+    };
+    const branches = [ComponentA, ComponentB];
 
     const extra = { extra: 'test' };
     const promise = resolveInitialData(branches, extra);
@@ -104,16 +131,20 @@ describe('resolveInitialData', () => {
     const { errors, store } = await promise;
     expect(store).toEqual({
       componentA: dataA,
-      componentB: dataB
+      componentB: dataB,
     });
     expect(errors).toEqual({});
   });
 
   it('should store failing promises on `errors`', async () => {
     const error = { cause: 'failing' };
-    const Component = { getInitialData: jest.fn().mockReturnValue({key: 'component', promise: Promise.reject(error)}) };
+    const Component = {
+      getInitialData: jest
+        .fn()
+        .mockReturnValue({ key: 'component', promise: Promise.reject(error) }),
+    };
 
-    const promise = resolveInitialData([ Component ]);
+    const promise = resolveInitialData([Component]);
     expect(Component.getInitialData).toHaveBeenCalledWith(Component, undefined);
 
     const { errors, store } = await promise;

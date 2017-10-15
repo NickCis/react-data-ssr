@@ -1,2 +1,2 @@
-const resolveInitialData = require('./resolve-initial-data');
+const resolveInitialData = require('./resolveInitialData');
 module.exports = { resolveInitialData };

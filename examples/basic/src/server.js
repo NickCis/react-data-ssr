@@ -18,40 +18,40 @@ server
     const branches = matchRoutes(routes, req.url);
     resolveInitialData(branches)
       .then(({store, errors}) => {
-      const context = {};
-      const markup = renderToString(
-        <StaticRouter location={req.url} context={context}>
-          {renderRoutes(routes, {
-            getInitialData: k => store[k],
-            hasLoadedComponent: k => k in store,
-            dismissLoadedComponent: () => console.trace('Should not call `dismissLoadedComponent` in SSR`'),
-          })}
-        </StaticRouter>
-      );
-      res.send(
-        `<!doctype html>
-        <html lang="">
-        <head>
-          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <meta charSet='utf-8' />
-          <title>React Data SSR example</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          ${assets.client.css
-            ? `<link rel="stylesheet" href="${assets.client.css}">`
-            : ''}
-           ${process.env.NODE_ENV === 'production'
-             ? `<script src="${assets.client.js}" defer></script>`
-             : `<script src="${assets.client.js}" defer crossorigin></script>`}
-        </head>
-        <body>
-          <div id="root">${markup}</div>
-          <script>
-            window.__INITIAL_DATA__ = ${serialize(store)}
-          </script>
-        </body>
-        </html>`
-      );
-    });
+        const context = {};
+        const markup = renderToString(
+          <StaticRouter location={req.url} context={context}>
+            {renderRoutes(routes, {
+              getInitialData: k => store[k],
+              hasLoadedComponent: k => k in store,
+              dismissLoadedComponent: () => console.trace('Should not call `dismissLoadedComponent` in SSR`'),
+            })}
+          </StaticRouter>
+        );
+        res.send(
+          `<!doctype html>
+          <html lang="">
+          <head>
+            <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+            <meta charSet='utf-8' />
+            <title>React Data SSR example</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            ${assets.client.css
+              ? `<link rel="stylesheet" href="${assets.client.css}">`
+              : ''}
+             ${process.env.NODE_ENV === 'production'
+               ? `<script src="${assets.client.js}" defer></script>`
+               : `<script src="${assets.client.js}" defer crossorigin></script>`}
+          </head>
+          <body>
+            <div id="root">${markup}</div>
+            <script>
+              window.__INITIAL_DATA__ = ${serialize(store)}
+            </script>
+          </body>
+          </html>`
+        );
+      });
   });
 
 export default server;

@@ -4953,6 +4953,14 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-data-ssr-server@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-data-ssr-server/-/react-data-ssr-server-1.0.0.tgz#0bcd915b7a1abfc497b58e136346217ae75d219b"
+
+react-data-ssr@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-data-ssr/-/react-data-ssr-1.0.0.tgz#6e6bcfb81eb62d87ed32d4c5035bc1471cc58e28"
+
 react-dev-utils@4.1.0, react-dev-utils@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.1.0.tgz#f6f436febd3f4eeb538490319b51c875c1e35bc5"

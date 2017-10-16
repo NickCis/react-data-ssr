@@ -6,6 +6,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import filesize from 'rollup-plugin-filesize';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 
+const name = 'ReactDataSSR';
 const shared = {
   input: 'src/index.js',
   external: ['react', 'prop-types'],
@@ -19,7 +20,7 @@ const shared = {
 export default [
   Object.assign({}, shared, {
     output: {
-      name: 'ReactDataSSR',
+      name,
       file:
         process.env.NODE_ENV === 'production'
           ? './dist/react-data-ssr.umd.min.js'
@@ -51,11 +52,13 @@ export default [
   Object.assign({}, shared, {
     output: [
       {
+        name,
         file: 'dist/react-data-ssr.es6.js',
         format: 'es',
         sourcemap: true,
       },
       {
+        name,
         file: 'dist/react-data-ssr.js',
         format: 'cjs',
         sourcemap: true,

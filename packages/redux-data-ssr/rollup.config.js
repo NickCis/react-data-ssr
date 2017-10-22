@@ -6,10 +6,13 @@ import resolve from 'rollup-plugin-node-resolve'
 import filesize from 'rollup-plugin-filesize';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 
+const name = 'ReduxDataSSR';
 const shared = {
   input: 'src/index.js',
-  external: ['react-redux'],
+  external: ['react', 'prop-types', 'react-redux'],
   globals: {
+    react: 'React',
+    'prop-types': 'PropTypes',
     'react-redux': 'ReactRedux',
   },
   exports: 'named',
@@ -18,7 +21,7 @@ const shared = {
 export default [
   Object.assign({}, shared, {
     output: {
-      name: 'ReduxDataSSR',
+      name,
       file:
         process.env.NODE_ENV === 'production'
           ? './dist/redux-data-ssr.umd.min.js'
@@ -50,11 +53,13 @@ export default [
   Object.assign({}, shared, {
     output: [
       {
+        name,
         file: 'dist/redux-data-ssr.es6.js',
         format: 'es',
         sourcemap: true,
       },
       {
+        name,
         file: 'dist/redux-data-ssr.js',
         format: 'cjs',
         sourcemap: true,

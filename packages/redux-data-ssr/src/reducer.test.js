@@ -1,8 +1,5 @@
 import reducer from './reducer';
-import {
-  SET_LOADED_COMPONENT,
-  DISMISS_LOADED_COMPONENT,
-} from './constants';
+import { SET_LOADED_COMPONENT, DISMISS_LOADED_COMPONENT } from './constants';
 
 describe('reducer', () => {
   it('should return the initial state', () => {
@@ -13,35 +10,76 @@ describe('reducer', () => {
 
   it('should handle SET_LOADED_COMPONENT', () => {
     const key = 'test-key';
-    const data = {
-      test: 'test',
-    };
-    expect(reducer({
+    expect(
+      reducer(
+        {
+          initialData: {
+            component: true,
+          },
+        },
+        {
+          type: SET_LOADED_COMPONENT,
+          key,
+        }
+      )
+    ).toEqual({
       initialData: {
-        component: { test: 'test' },
+        component: true,
+        [key]: true,
       },
-    }, {
-      type: SET_LOADED_COMPONENT,
-      key,
-      data,
-    })).toEqual({
-      initialData: {
-        component: { test: 'test' },
-        [ key ]: data,
-      }
     });
   });
 
-  it('should handle DISMISS_LOADED_COMPONENT', () => {
-    expect(reducer({
+  it('should not mutate state (SET_LOADED_COMPONENT)', () => {
+    const key = 'test-key';
+    const getState = () => ({
       initialData: {
-        component: { test: 'test' },
+        component: true,
       },
-    }, {
-      type: SET_LOADED_COMPONENT,
-      key: 'component',
-    })).toEqual({
-      initialData: {}
     });
+    const state = getState();
+
+    reducer(state, {
+      type: SET_LOADED_COMPONENT,
+      key,
+    });
+
+    expect(state).toEqual(getState());
+  });
+
+  it('should handle DISMISS_LOADED_COMPONENT', () => {
+    const key = 'component';
+    expect(
+      reducer(
+        {
+          initialData: {
+            [key]: true,
+          },
+        },
+        {
+          type: DISMISS_LOADED_COMPONENT,
+          key,
+        }
+      )
+    ).toEqual({
+      initialData: {},
+    });
+  });
+
+  it('should not mutate state (DISMISS_LOADED_COMPONENT)', () => {
+    const key = 'component';
+    const getState = () => ({
+      initialData: {
+        [key]: true,
+      },
+    });
+    const state = getState();
+
+    reducer(state, {
+      type: DISMISS_LOADED_COMPONENT,
+      key,
+    });
+
+    expect(state).toEqual(getState());
   });
 });

@@ -1,12 +1,8 @@
-import {
-  SET_LOADED_COMPONENT,
-  DISMISS_LOADED_COMPONENT,
-} from './constants';
+import { SET_LOADED_COMPONENT, DISMISS_LOADED_COMPONENT } from './constants';
 
-const setLoadedComponent = (key, data) => ({
+const setLoadedComponent = key => ({
   type: SET_LOADED_COMPONENT,
   key,
-  data,
 });
 
 const dismissLoadedComponent = key => ({
@@ -14,7 +10,4 @@ const dismissLoadedComponent = key => ({
   key,
 });
 
-export {
-  setLoadedComponent,
-  dismissLoadedComponent,
-};
+export { setLoadedComponent, dismissLoadedComponent };

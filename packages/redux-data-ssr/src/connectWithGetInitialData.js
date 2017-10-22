@@ -1,26 +1,21 @@
 import { withGetInitialData } from 'react-data-ssr';
 import { connect } from 'react-redux';
-import { dismissLoadedComponent } from './actions';
+import { setLoadedComponent, dismissLoadedComponent } from './actions';
 import { REDUCER_KEY } from './constants';
 
-const connectWithGetInitialData = ({
-  getData,
-  shouldGetData,
-  generateComponentKey,
-  mapArgsToProps,
-}) => (mapStateToProps, mapDispatchToProps) => C => {
+const connectWithGetInitialData = ({ mapArgsToProps, ...conf }) => (
+  mapStateToProps,
+  mapDispatchToProps
+) => C => {
   const _mapArgsToProps = (branch, extra) => {
     const { getState, dispatch } = extra;
     const props = {};
 
-    if (mapStateToProps)
-      Object.assign(props, mapStateToProps(getState()))
+    if (mapStateToProps) Object.assign(props, mapStateToProps(getState()));
 
-    if (mapDispatchToProps)
-      Object.assign(props, mapDispatchToProps(dispatch))
+    if (mapDispatchToProps) Object.assign(props, mapDispatchToProps(dispatch));
 
-    if (mapArgsToProps)
-      Object.assign(props, mapArgsToProps(branch, extra));
+    if (mapArgsToProps) Object.assign(props, mapArgsToProps(branch, extra));
 
     return props;
   };
@@ -28,7 +23,7 @@ const connectWithGetInitialData = ({
   const _mapStateToProps = state => ({
     ...(mapStateToProps ? mapStateToProps(state) : {}),
     getInitialData: k => state[REDUCER_KEY].initialData[k],
-    hasLoadedComponent: k => k in state[REDUCER_KEY].initialData,
+    hasLoadedComponent: k => state[REDUCER_KEY].initialData[k],
   });
 
   const _mapDispatchToProps = dispatch => ({
@@ -37,13 +32,32 @@ const connectWithGetInitialData = ({
   });
 
   const Component = withGetInitialData({
-    getData,
-    shouldGetData,
-    generateComponentKey,
+    ...conf,
     // Data we'll be seted / mapped by redux
     mapDataToProps: () => {},
     mapArgsToProps: _mapArgsToProps,
   })(C);
+
+  // getInitialData will be overriden in order to dispatch `setLoadedComponent` action
+  const getInitialData = Component.getInitialData;
+  Component.getInitialData = (branch, extra, ...args) => {
+    const ret = getInitialData(branch, extra, ...args);
+    const { promise, key } = ret;
+    const { dispatch } = extra;
+
+    ret.promise = promise.then(
+      d => {
+        dispatch(setLoadedComponent(key));
+        return d;
+      },
+      e => {
+        dispatch(setLoadedComponent(key));
+        return Promise.reject(e);
+      }
+    );
+
+    return ret;
+  };
 
   return connect(_mapStateToProps, _mapDispatchToProps)(Component);
 };

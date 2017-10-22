@@ -19,11 +19,14 @@
     "express": "^4.15.4",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
-    "react-data-ssr": "^1.1.0",
     "react-data-ssr-server": "^1.0.0",
     "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-data-ssr": "^1.1.0",
+    "redux-thunk": "^2.2.0",
     "serialize-javascript": "^1.4.0"
   },
   "devDependencies": {

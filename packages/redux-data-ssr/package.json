@@ -31,8 +31,8 @@
     "prebuild": "rimraf dist",
     "build": "rollup -c"
   },
-  "dependency": {
-    "react-data-ssr": "1.0.0"
+  "dependencies": {
+    "react-data-ssr": "^1.1.0"
   },
   "peerDependencies": {
     "react-redux": ">=5"

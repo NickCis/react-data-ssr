@@ -1,22 +1,4 @@
-/** Builds a response object fetch api like
- * @param {Object} data - with properties `status` and `json`
- *
- * @return {Object} Fetch like response object
- */
-function buildResponse(data) {
-  return {
-    get status() {
-      return data.status || 200;
-    },
-    get ok() {
-      const status = data.status || 200;
-      return status >= 200 && status < 300;
-    },
-    type: 'SSR',
-    // XXX: we will only implement `json` method
-    json: () => data.json,
-  };
-}
+import ResponseHandler from './ResponseHandler';
 
 /** Creates a Proxy object for the request.
  *
@@ -60,41 +42,6 @@ function createRequest(url, req, { method, query } = {}) {
   });
 }
 
-/** Creates a response handler.
- *
- * Bassicaly is an object with two properties:
- * - handler: `{function}` a Express like response object
- * - promise: `{Promise}` a fetch like return promise
- *
- * @return {Object}
- */
-function createResponseHandler() {
-  const responseData = {};
-  const response = buildResponse(responseData);
-  let handler;
-  const promise = new Promise((rs, rj) => {
-    handler = {
-      status: s => {
-        responseData.status = s;
-        return handler;
-      },
-      json: j => {
-        responseData.json = j;
-        rs(response);
-        return handler;
-      },
-      end: () => {
-        return handler;
-      },
-    };
-  });
-
-  return {
-    promise,
-    handler,
-  };
-}
-
 // TODO: next
 const createFetch = (router, base = '') => (url, { req, ...opts } = {}) => {
   if (base) {
@@ -105,12 +52,11 @@ const createFetch = (router, base = '') => (url, { req, ...opts } = {}) => {
     url = url.substr(base.length);
   }
 
-  const { handler, promise } = createResponseHandler();
+  const handler = new ResponseHandler();
   router(createRequest(url, req || {}, opts), handler, () =>
     console.log('next')
   );
-
-  return promise;
+  return handler;
 };
 
 export default createFetch;

@@ -42,7 +42,6 @@ function createRequest(url, req, { method, query } = {}) {
   });
 }
 
-// TODO: next
 const createFetch = (router, base = '') => (url, { req, ...opts } = {}) => {
   if (base) {
     if (!url.startsWith(base))
@@ -53,9 +52,11 @@ const createFetch = (router, base = '') => (url, { req, ...opts } = {}) => {
   }
 
   const handler = new ResponseHandler();
+
   router(createRequest(url, req || {}, opts), handler, () =>
-    console.log('next')
+    handler.status(404).json({})
   );
+
   return handler;
 };
 

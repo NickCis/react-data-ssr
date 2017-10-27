@@ -19,6 +19,13 @@ class ResponseHandler {
     return this.promise.then(...args);
   }
 
+  /** Promise like catch
+   * @return {Promise} - The chained promise
+   */
+  catch(...args) {
+    return this.promise.catch(...args);
+  }
+
   // TODO: implement more methods
 
   json(j) {

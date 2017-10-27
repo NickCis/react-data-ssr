@@ -2252,6 +2252,10 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
+express-data-ssr@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/express-data-ssr/-/express-data-ssr-1.2.0.tgz#993b85885d0976874a99b54e3d9dc746d7d48ae6"
+
 express@^4.13.3, express@^4.15.4:
   version "4.16.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.1.tgz#6b33b560183c9b253b7b62144df33a4654ac9ed0"
@@ -4957,9 +4961,9 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-data-ssr-server@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-data-ssr-server/-/react-data-ssr-server-1.0.0.tgz#0bcd915b7a1abfc497b58e136346217ae75d219b"
+react-data-ssr-server@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-data-ssr-server/-/react-data-ssr-server-1.2.0.tgz#ff2d4f0b4057c5b52582a7bece0b7cbf8ffc891c"
 
 react-data-ssr@^1.1.0:
   version "1.1.0"

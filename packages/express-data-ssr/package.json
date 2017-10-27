@@ -1,7 +1,7 @@
 {
   "name": "express-data-ssr",
   "description": "`fetch` like function to perform local calls to an Express-based router.",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
   "repository": "git@github.com:nickcis/react-data-ssr.git",

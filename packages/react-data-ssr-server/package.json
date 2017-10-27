@@ -1,7 +1,7 @@
 {
   "name": "react-data-ssr-server",
   "description": "Server side initial data resolution for react-data-ssr",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
   "repository": "git@github.com:nickcis/react-data-ssr.git",

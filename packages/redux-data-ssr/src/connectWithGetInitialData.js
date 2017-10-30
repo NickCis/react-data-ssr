@@ -11,23 +11,25 @@ const connectWithGetInitialData = ({ mapArgsToProps, ...conf }) => (
     const { getState, dispatch } = extra;
     const props = {};
 
-    if (mapStateToProps) Object.assign(props, mapStateToProps(getState()));
-
-    if (mapDispatchToProps) Object.assign(props, mapDispatchToProps(dispatch));
-
     if (mapArgsToProps) Object.assign(props, mapArgsToProps(branch, extra));
+
+    if (mapStateToProps)
+      Object.assign(props, mapStateToProps(getState(), props));
+
+    if (mapDispatchToProps)
+      Object.assign(props, mapDispatchToProps(dispatch, props));
 
     return props;
   };
 
-  const _mapStateToProps = state => ({
-    ...(mapStateToProps ? mapStateToProps(state) : {}),
+  const _mapStateToProps = (state, ownProps) => ({
+    ...(mapStateToProps ? mapStateToProps(state, ownProps) : {}),
     getInitialData: k => state[REDUCER_KEY].initialData[k],
     hasLoadedComponent: k => state[REDUCER_KEY].initialData[k],
   });
 
-  const _mapDispatchToProps = dispatch => ({
-    ...(mapDispatchToProps ? mapDispatchToProps(dispatch) : {}),
+  const _mapDispatchToProps = (dispatch, ownProps) => ({
+    ...(mapDispatchToProps ? mapDispatchToProps(dispatch, ownProps) : {}),
     dismissLoadedComponent: k => dispatch(dismissLoadedComponent(k)),
   });
 

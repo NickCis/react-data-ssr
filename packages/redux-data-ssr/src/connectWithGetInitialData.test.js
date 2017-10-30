@@ -75,6 +75,36 @@ describe('connectWithGetInitialData - Client', () => {
     expect(store.getActions()).toEqual([mockAction]);
   });
 
+  it('should connect with redux state / dispatch (access to ownProps)', () => {
+    const store = mockStore({
+      ...getInitialState(),
+      test: 'test',
+    });
+    const MockComponent = jest.fn().mockReturnValue(null);
+    const mapStateToProps = (state, ownProps) => {
+      expect(ownProps.myOwnProp).toBe('myOwnProp');
+      return { test: state.test };
+    };
+    const mapArgsToProps = (branch, extra) => ({
+      myOwnProp: extra.myOwnProp,
+    });
+    const getData = jest.fn().mockImplementation(({ test, dispatch }) => {
+      expect(test).toBe('test');
+      return Promise.resolve(null);
+    });
+    const Component = connectWithGetInitialData({ getData, mapArgsToProps })(
+      mapStateToProps
+    )(MockComponent);
+
+    mount(
+      <Provider store={store}>
+        <Component myOwnProp="myOwnProp" />
+      </Provider>
+    );
+
+    expect(getData).toHaveBeenCalled();
+  });
+
   it('should dismiss data (dispatch DISMISS_LOADED_COMPONENT)', () => {
     const store = mockStore(getInitialState());
     const MockComponent = jest.fn().mockReturnValue(null);
@@ -158,5 +188,41 @@ describe('connectWithGetInitialData - SSR', () => {
         type: 'SET_LOADED_COMPONENT',
       },
     ]);
+  });
+
+  it('should connect with redux state / dispatch (access to ownProps)', async () => {
+    const store = mockStore({
+      ...getInitialState(),
+      test: 'test',
+    });
+    const MockComponent = jest.fn().mockReturnValue(null);
+    const mapStateToProps = (state, ownProps) => {
+      expect(ownProps.myOwnProp).toBe('myOwnProp');
+      return { test: state.test };
+    };
+    const mapArgsToProps = (branch, extra) => ({
+      myOwnProp: extra.myOwnProp,
+    });
+    const getData = jest.fn().mockImplementation(({ test }) => {
+      expect(test).toBe('test');
+      return Promise.resolve(null);
+    });
+    const Component = connectWithGetInitialData({
+      getData,
+      generateComponentKey,
+      mapArgsToProps,
+    })(mapStateToProps)(MockComponent);
+
+    const { promise } = Component.getInitialData(
+      {},
+      {
+        dispatch: a => store.dispatch(a),
+        getState: () => store.getState(),
+        myOwnProp: 'myOwnProp',
+      }
+    );
+    await promise;
+
+    expect(getData).toHaveBeenCalled();
   });
 });

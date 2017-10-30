@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "react-data-ssr-fetch-example",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MIT",
   "scripts": {
     "start": "razzle start",

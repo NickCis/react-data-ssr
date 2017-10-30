@@ -1,7 +1,7 @@
 {
   "name": "redux-data-ssr",
   "description": "Data fetching for React components (Client & SSR) - Redux bindings",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "license": "MIT",
   "author": "Nicolas Cisco <ncisco@gmail.com>",
   "repository": "git@github.com:nickcis/redux-data-ssr.git",
